@@ -1,7 +1,10 @@
 from flask import Flask, request, render_template, redirect, url_for
 from flask_bcrypt import Bcrypt
 from config import *
+import random
 
+num_questions = 5
+selected_personages = []
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -30,7 +33,7 @@ def sign_up():
             db.close()
             return redirect(url_for('index'))
         else:
-            return 'no input'
+            return redirect(url_for('sign_up'))
     return render_template('sign_up.html')
 
 
@@ -42,22 +45,53 @@ def login():
 
         db = Config.get_connection()
         cur = db.cursor()
-        SQL = "SELECT password FROM users WHERE email = %s"
+        sql = "SELECT password FROM users WHERE email = %s"
         data = (email,)
-        cur.execute(SQL, data)
+        cur.execute(sql, data)
         query_result = cur.fetchone()
         cur.close()
         db.close()
         if query_result:
             pw_hash = query_result[0]
             if bcrypt.check_password_hash(pw_hash, password_candidate):
-                return redirect(url_for('index'))
+                return redirect(url_for('quiz', question_number=1))
             else: # password incorrect
                 return redirect(url_for('login'))
         else: # email not found in DB
             return redirect(url_for('login'))
     return render_template('login.html')
 
+
+@app.route('/quiz/<int:question_number>', methods=['GET', 'POST'])
+def quiz(question_number):
+    global selected_personages
+    if question_number == 0:
+        selected_personages = []
+
+    personages_ids = []
+
+    db = Config.get_connection()
+    cur = db.cursor()
+    cur.execute("SELECT id_person FROM person")
+    query_result = cur.fetchall()
+
+    for personage in query_result:
+        personages_ids.append(personage[0])
+    curr_personage_id = random.choice(personages_ids)
+    while curr_personage_id in selected_personages:
+        curr_personage_id = random.choice(personages_ids)
+    selected_personages.append(curr_personage_id)
+
+    sql = "SELECT * FROM person WHERE id_person = %s"
+    data = (curr_personage_id,)
+    cur.execute(sql, data)
+    query_result = cur.fetchone()
+    cur.close()
+    db.close()
+
+    #return str(curr_personage_id)
+    #return query_result[1]
+    return render_template('quiz_test.html', curr_personage_name = query_result[1], selected_personages=selected_personages)
 
 if  __name__ == '__main__':
     app.run(debug=True)
