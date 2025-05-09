@@ -16,5 +16,14 @@ class Config:
         return conn
 
 
-db = Config.get_connection()
-cur = db.cursor()
+#à mettre dans une methode pour appel des queries
+#coir l'exemple
+
+# db = Config.get_connection()
+# cur = db.cursor()
+
+#cur.execute(""" SELECT * FROM users
+#                 """)
+
+# cur.close()
+# db.close()
