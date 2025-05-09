@@ -69,11 +69,11 @@ class CreateTable:
                                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                     FOREIGN KEY (id_users) REFERENCES users(id_users))
                                     """)
-            db.commit()
             print("Tables créées")
         except Exception as e:
             print("Erreur:", e)
         finally:
+            db.commit()
             cur.close()
             db.close()
 

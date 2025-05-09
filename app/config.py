@@ -32,6 +32,14 @@ class ConnectQuizzDb:
         except psycopg2.OperationalError as e:
             print(e)
 
+class DisconnectQuizzDb:
+    @staticmethod
+    def disconnect_db(db):
+        try:
+            db.close()
+        except Exception as e:
+            print("erreur:", e)
+
 
 #à mettre dans une methode pour appel des queries
 #voir l'exemple
@@ -42,3 +50,14 @@ class ConnectQuizzDb:
 # db.commit()
 # cur.close()
 # db.close()
+
+class Query1:
+    @staticmethod
+    def query_1(cur, db):
+        try:
+            cur.execute(""" INSERT INTO person (name) VALUES (Naruto) """)
+        except Exception as e:
+            print ("Erreur: ", e)
+        finally:
+            db.commit()
+            cur.close()
