@@ -24,21 +24,10 @@ class Config:
 
 #à mettre dans une methode pour appel des queries
 #voir l'exemple
-db = Config.get_connection()
-cur = db.cursor()
-
-# cur.execute(""" CREATE TABLE ranking (
-#     id_ranking SERIAL PRIMARY KEY,
-#     id_users INTEGER NOT NULL,
-#     score INT NOT NULL,
-#     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-#     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-#     FOREIGN KEY (id_users) REFERENCES users(id_users)
-# );
+# db = Config.get_connection()
+# cur = db.cursor()
+# cur.execute(""" query
 # """)
-
-# cur.execute(""" INSERT INTO
-# """)
-db.commit()
-cur.close()
-db.close()
+# db.commit()
+# cur.close()
+# db.close()
