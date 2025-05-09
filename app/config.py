@@ -4,26 +4,41 @@ import os
 
 load_dotenv()
 
+
+
+
 class Config:
 
     @staticmethod
     def get_connection():
-        conn = psycopg2.connect(
-            dbname=os.getenv('DB_NAME'),
-            user=os.getenv('DB_USER'),
-            host=os.getenv('DB_HOST'),
-            password=os.getenv('DB_PWD'))
-        return conn
+        try:
+            conn = psycopg2.connect(
+                dbname=os.getenv('DB_NAME'),
+                user=os.getenv('DB_USER'),
+                host=os.getenv('DB_HOST'),
+                password=os.getenv('DB_PWD'))
+            return conn
+        except psycopg2.OperationalError as e:
+            print(e)
 
 
 #à mettre dans une methode pour appel des queries
-#coir l'exemple
+#voir l'exemple
+db = Config.get_connection()
+cur = db.cursor()
 
-# db = Config.get_connection()
-# cur = db.cursor()
+# cur.execute(""" CREATE TABLE ranking (
+#     id_ranking SERIAL PRIMARY KEY,
+#     id_users INTEGER NOT NULL,
+#     score INT NOT NULL,
+#     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+#     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+#     FOREIGN KEY (id_users) REFERENCES users(id_users)
+# );
+# """)
 
-#cur.execute(""" SELECT * FROM users
-#                 """)
-
-# cur.close()
-# db.close()
+# cur.execute(""" INSERT INTO
+# """)
+db.commit()
+cur.close()
+db.close()
