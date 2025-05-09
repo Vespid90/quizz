@@ -45,13 +45,16 @@ def login():
         SQL = "SELECT password FROM users WHERE email = %s"
         data = (email,)
         cur.execute(SQL, data)
-        pw_hash = cur.fetchone()[0]
+        query_result = cur.fetchone()
         cur.close()
         db.close()
-
-        if bcrypt.check_password_hash(pw_hash, password_candidate):
-            return redirect(url_for('index'))
-        else:
+        if query_result:
+            pw_hash = query_result[0]
+            if bcrypt.check_password_hash(pw_hash, password_candidate):
+                return redirect(url_for('index'))
+            else: # password incorrect
+                return redirect(url_for('login'))
+        else: # email not found in DB
             return redirect(url_for('login'))
     return render_template('login.html')
 
