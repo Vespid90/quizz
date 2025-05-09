@@ -34,25 +34,25 @@ class ConnectQuizzDb:
 
 class DisconnectQuizzDb:
     @staticmethod
-    def disconnect_db(db):
+    def disconnect_db(conn):
         try:
-            db.close()
+            conn.close()
         except Exception as e:
             print("erreur:", e)
 
 
 
-#exemple de query solide
-# db = ConnectQuizzDb.get_connection()
-# cur = db.cursor()
+#exemple de query avec un try/catch
+# conn = ConnectQuizzDb.get_connection()
+# cur = conn.cursor()
 #
 # class Query1:
 #     @staticmethod
-#     def query_1(cur, db):
+#     def query_1(cur, conn):
 #         try:
 #             cur.execute(""" INSERT INTO person (name) VALUES (Naruto) """)
 #         except Exception as e:
 #             print ("Erreur: ", e)
 #         finally:
-#             db.commit()
+#             conn.commit()
 #             cur.close()
