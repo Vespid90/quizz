@@ -41,23 +41,18 @@ class DisconnectQuizzDb:
             print("erreur:", e)
 
 
-#à mettre dans une methode pour appel des queries
-#voir l'exemple
-# db = Config.get_connection()
-# cur = db.cursor()
-# cur.execute(""" query
-# """)
-# db.commit()
-# cur.close()
-# db.close()
 
-class Query1:
-    @staticmethod
-    def query_1(cur, db):
-        try:
-            cur.execute(""" INSERT INTO person (name) VALUES (Naruto) """)
-        except Exception as e:
-            print ("Erreur: ", e)
-        finally:
-            db.commit()
-            cur.close()
+#exemple de query solide
+# db = ConnectQuizzDb.get_connection()
+# cur = db.cursor()
+#
+# class Query1:
+#     @staticmethod
+#     def query_1(cur, db):
+#         try:
+#             cur.execute(""" INSERT INTO person (name) VALUES (Naruto) """)
+#         except Exception as e:
+#             print ("Erreur: ", e)
+#         finally:
+#             db.commit()
+#             cur.close()
