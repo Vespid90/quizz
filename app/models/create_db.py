@@ -50,16 +50,17 @@ class CreateTable:
                                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
                                     """)
 
-            cur.execute(""" CREATE TABLE IF NOT EXISTS person (
-                                    id_person SERIAL PRIMARY KEY,
-                                    first_name VARCHAR(100) NOT NULL,
-                                    last_name VARCHAR(100) NOT NULL,
-                                    image1 VARCHAR(255) NOT NULL,
-                                    image2 VARCHAR(255) NOT NULL,
-                                    image3 VARCHAR(255) NOT NULL,
+            cur.execute(""" CREATE TABLE IF NOT EXISTS quiz_perso (
+                                    id SERIAL PRIMARY KEY,
+                                    name VARCHAR(255),
+                                    image_url TEXT,
+                                    image2_url TEXT,
+                                    image3_url TEXT,
+                                    anime_id INTEGER,
+                                    anime_name VARCHAR(255),
                                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
-                                    """)
+            """)
 
             cur.execute(""" CREATE TABLE IF NOT EXISTS ranking (
                                     id_ranking SERIAL PRIMARY KEY,
