@@ -2,7 +2,6 @@ from flask import Flask, request, render_template, redirect, url_for
 from flask_bcrypt import Bcrypt
 from config import *
 
-temp = ''
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
