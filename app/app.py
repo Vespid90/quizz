@@ -19,7 +19,7 @@ def sign_up():
         email = request.form.get('email')
         password = request.form.get('password')
         if password:
-            pw_hash = bcrypt.generate_password_hash(password)
+            pw_hash = bcrypt.generate_password_hash(password).decode('utf8')
 
             db = Config.get_connection()
             cur = db.cursor()
