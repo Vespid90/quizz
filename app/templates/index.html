@@ -1,20 +1,9 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Acceuil</title>
-      <link href="../static/css/style.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-</head>
+{% extends 'base.html' %}
+{% block title %}Accueil{% endblock %}
 
-<header>
-    {% include 'header.html'%}
-</header>
-<body>
-        <section class="vh-100 gradient-custom">
-          <div class="bg-image"
-             style="background-image: url('../static/img/bgAnime.jpg');height: 100vh">
+{% block body %}
+<section class="vh-100 gradient-custom">
+          <div class="bg-image">
               <div class="container py-5 h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
                   <div class="col-12 col-md-8 col-lg-6 col-xl-5">
@@ -32,9 +21,9 @@
 
 
                           <!--<p class="small mb-5 pb-lg-2"><a class="text-white-50" href="#!">mot de passe oublier?</a></p> --!>
-
-                          <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" type="submit" ><a href="/login">Connection</a></button>
-
+                        <form action="/login">
+                          <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" type="submit" >Connection</button>
+                        </form>
                         </div>
 
                         <div>
@@ -49,7 +38,4 @@
               </div>
         </div>
 </section>
-
-
-</body>
-</html>
+{% endblock %}

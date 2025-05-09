@@ -27,3 +27,8 @@ def quiz():
 @app.route("/leader_board")
 def learder_board():
    return render_template("leader_board.html")
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
