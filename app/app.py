@@ -11,7 +11,7 @@ bcrypt = Bcrypt(app)
 def index():
     return render_template('index.html')
 
-@app.route('/sign_up', methods =['GET', 'POST'])
+@app.route('/sign_up/', methods =['GET', 'POST'])
 def sign_up():
     if request.method == "POST":
         last_name = request.form.get('last_name')
@@ -26,13 +26,16 @@ def sign_up():
             cur.execute(""" INSERT INTO users(first_name, last_name, email, password)
                                VALUES (%s, %s, %s, %s);
                                 """, (first_name, last_name, email, pw_hash))
+            db.commit()
             cur.close()
             db.close()
             return redirect(url_for('index'))
+        else:
+            return 'no input'
     return render_template('sign_up.html')
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
         email = request.form.get('email')
