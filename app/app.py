@@ -18,17 +18,17 @@ def sign_up():
         first_name = request.form.get('first_name')
         email = request.form.get('email')
         password = request.form.get('password')
-        pw_hash = bcrypt.generate_password_hash(password)
+        if password:
+            pw_hash = bcrypt.generate_password_hash(password)
 
-        db = Config.get_connection()
-        cur = db.cursor()
-        cur.execute(""" INSERT INTO users(first_name, last_name, email, password)
+            db = Config.get_connection()
+            cur = db.cursor()
+            cur.execute(""" INSERT INTO users(first_name, last_name, email, password)
                                VALUES (%s, %s, %s, %s);
                                 """, (first_name, last_name, email, pw_hash))
-        cur.close()
-        db.close()
-
-        return redirect(url_for('index'))
+            cur.close()
+            db.close()
+            return redirect(url_for('index'))
     return render_template('sign_up.html')
 
 
