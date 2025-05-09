@@ -4,11 +4,7 @@ import os
 
 load_dotenv()
 
-
-
-
 class Config:
-
     @staticmethod
     def get_connection():
         try:
