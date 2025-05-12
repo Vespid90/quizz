@@ -110,7 +110,7 @@ def quiz(question_number):
     #return query_result[1]
     return render_template('quiz_test.html', curr_personage_name = selected_personage_row[1],
                            already_selected_personages=already_selected_personages,
-                           image_link = query_result[num_img + 1],
+                           image_link = selected_personage_row[num_img + 1],
                            false_answers = false_answers)
 
 if  __name__ == '__main__':
