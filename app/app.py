@@ -3,9 +3,10 @@ from flask_bcrypt import Bcrypt
 from config import *
 import random
 
-num_questions_per_series = 5
+num_questions_per_series = 2
 already_selected_personages = []
 points = 0
+curr_personage_id = -1
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -68,6 +69,9 @@ def login():
 
 @app.route('/quiz/<int:question_number>', methods=['GET', 'POST'])
 def quiz(question_number):
+
+    print("start quiz") # for testing
+
     global already_selected_personages
     global points
     names = []
@@ -75,7 +79,6 @@ def quiz(question_number):
     if question_number == 1:
         already_selected_personages = []
         points = 0
-
 
     db = ConnectQuizzDb.get_connection()
     cur = db.cursor()
@@ -99,7 +102,9 @@ def quiz(question_number):
     selected_personage_row = cur.fetchone()
     # name
     correct_answer = selected_personage_row[0]
+    print('correct_answer from sql',correct_answer)  # for testing
     names.append(correct_answer)
+
     # randomly select one of 3 images
     image_link = random.choice(selected_personage_row[1:4])
 
@@ -121,6 +126,12 @@ def quiz(question_number):
         user_answer = request.form.get('name')
         if user_answer == correct_answer:
             points += 1
+
+        print("after post:")        # for test
+        print("correct_answer: ",correct_answer)  # for test
+        print("user_answer: ", user_answer)  # for test
+        print("points: ", points)  # for test
+
         if question_number >= num_questions_per_series:
             return redirect(url_for('quiz', question_number=1))  # change url
         else:
@@ -136,7 +147,6 @@ def quiz(question_number):
 
 classement={"farid LeGoat","Larry LeMalicieux" ,"Jojo L'astico" ,"Tatiana LaGoat"}
 #from config import base
-
 
 @app.route("/leader_board")
 def learder_board():
