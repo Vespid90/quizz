@@ -69,7 +69,6 @@ def login():
 def quiz(question_number):
     if question_number > num_questions_per_series:
         return redirect(url_for('quiz', question_number=0)) # or other page?
-
     global already_selected_personages
     names = []
     # if first question in series -> clear list of already selected personages
