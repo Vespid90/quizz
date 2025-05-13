@@ -67,15 +67,13 @@ def quiz(question_number):
     global already_selected_personages
     if question_number == 0:
         already_selected_personages = []
-
-    personages_ids = []
+    names = []
 
     db = Config.get_connection()
     cur = db.cursor()
     cur.execute("SELECT id_person FROM person")
     query_result = cur.fetchall()
-    for personage in query_result:
-        personages_ids.append(personage[0])
+    personages_ids = list(map(lambda x : x[0], query_result))
 
     # randomly select one personage (but not among those who was already selected earlier in this series of questions)
     curr_personage_id = random.choice(list(set(personages_ids) - set(already_selected_personages)))
@@ -85,33 +83,37 @@ def quiz(question_number):
     # randomly select two other personages for false answers
     personages_ids.remove(curr_personage_id)
     false_answers_ids = random.sample(personages_ids,2)
-    personages_ids.append(curr_personage_id)
 
-    # get information about the selected personages (name + image)
-    sql = "SELECT * FROM person WHERE id_person = %s"
+    # get information about the selected personages (name + images)
+    sql = "SELECT name, image1, image2, image3 FROM person WHERE id_person = %s"
     data = (curr_personage_id,)
     cur.execute(sql, data)
     selected_personage_row = cur.fetchone()
 
+    names.append(selected_personage_row[0])
+    # randomly select one of 3 images
+    image_link = random.choice(selected_personage_row[1:4])
+
+    # get names for 2 false answers
     sql = "SELECT name FROM person WHERE id_person in (%s, %s)"
     data = (false_answers_ids[0], false_answers_ids[1])
     cur.execute(sql, data)
-    false_answers = []
     for res_row in cur.fetchall():
-        false_answers.append(res_row[0])
+        names.append(res_row[0])
 
     cur.close()
     db.close()
 
-    #randomly select one of 3 images
-    num_img = random.choice([1, 2, 3])
+    # shuffle 3 answers
+    random.shuffle(names)
 
-    #return str(curr_personage_id)
-    #return query_result[1]
-    return render_template('quiz_test.html', curr_personage_name = selected_personage_row[1],
-                           already_selected_personages=already_selected_personages,
-                           image_link = selected_personage_row[num_img + 1],
-                           false_answers = false_answers)
+    return render_template('quiz_test.html',
+                           names = names,
+                           image_link = image_link,
+                           question_number = question_number,
+                           num_questions_per_series = num_questions_per_series
+                           )
+
 
 if  __name__ == '__main__':
     app.run(debug=True)
