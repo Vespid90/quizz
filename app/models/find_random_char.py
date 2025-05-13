@@ -17,7 +17,7 @@ images = FindImage.prepare_images(char["image_url"])
 
 
 perso = FetchChar.fetch_random_character()
-AddChar.add_char(perso, images)
+AddChar.add_char(perso)
 if perso:
     print(f"Nom : {perso['nom']}")
     print(f"Image : {perso['image_url']}")
