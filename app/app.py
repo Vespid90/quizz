@@ -30,7 +30,7 @@ def sign_up():
                                   VALUES (%s, %s, %s, %s);
                                   """, (first_name, last_name, email, pw_hash))
             except:
-                return redirect(url_for('login')) #error by executing the sql-query (for example email already exists in DB)
+                return redirect(url_for('sign_up')) #error by executing the sql-query
             db.commit()
             cur.close()
             db.close()
@@ -117,6 +117,7 @@ def quiz(question_number):
     # read and save user's answer
     if request.method == "POST":
         user_answer = request.form.get('name')
+        return redirect(url_for('quiz', question_number=question_number + 1))
         if True:
             pass
         else:
