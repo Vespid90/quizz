@@ -64,14 +64,17 @@ def login():
 
 @app.route('/quiz/<int:question_number>', methods=['GET', 'POST'])
 def quiz(question_number):
-    if question_number > num_questions_per_series:
-        return redirect(url_for('quiz', question_number=0)) # or other page?
+
+    print("start quiz") # for testing
 
     global already_selected_personages
-    # if first question in series -> clear list of already selected personages
-    if question_number == 0:
-        already_selected_personages = []
+    global points
     names = []
+    # if first question in series -> clear list of already selected personages
+    if question_number == 1:
+        already_selected_personages = []
+        points = 0
+        print("question",question_number)
 
     db = ConnectQuizzDb.get_connection()
     cur = db.cursor()
@@ -94,7 +97,25 @@ def quiz(question_number):
     cur.execute(sql, data)
     selected_personage_row = cur.fetchone()
     # name
-    names.append(selected_personage_row[0])
+    correct_answer = selected_personage_row[0]
+    print('correct_answer from sql',correct_answer)  # for testing
+    names.append(correct_answer)
+    if request.method == "POST":
+        user_answer = request.form.get('name')
+        print(user_answer)
+        print(correct_answer)
+        if user_answer == correct_answer:
+            points += 1
+
+        print("after post:")  # for test
+        print("correct_answer: ", correct_answer)  # for test
+        print("user_answer: ", user_answer)  # for test
+        print("points: ", points)  # for test
+
+        if question_number >= num_questions_per_series:
+            return redirect(url_for('quiz', question_number=1))  # change url
+        else:
+            return redirect(url_for('quiz', question_number=question_number + 1))
     # randomly select one of 3 images
     image_link = random.choice(selected_personage_row[1:4])
 
@@ -112,20 +133,15 @@ def quiz(question_number):
     random.shuffle(names)
 
     # read and save user's answer
-    if request.method == "POST":
-        return redirect(url_for('quiz', question_number=question_number + 1))
-        if True:
-            pass
-        else:
-            pass
+
 
     return render_template('quiz.html',
                            names = names,
                            image_link = image_link,
                            question_number = question_number,
-                           num_questions_per_series = num_questions_per_series
+                           num_questions_per_series = num_questions_per_series,
+                           points=points
                            )
-
 
 
 classement=[{'5' :'farid LeGoat'},
