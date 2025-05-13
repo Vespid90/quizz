@@ -71,10 +71,11 @@ def quiz(question_number):
         return redirect(url_for('quiz', question_number=0)) # or other page?
 
     global already_selected_personages
+    names = []
     # if first question in series -> clear list of already selected personages
     if question_number == 0:
         already_selected_personages = []
-    names = []
+
 
     db = ConnectQuizzDb.get_connection()
     cur = db.cursor()
