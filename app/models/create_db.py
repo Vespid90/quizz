@@ -52,6 +52,7 @@ class CreateTable:
 
             cur.execute(""" CREATE TABLE IF NOT EXISTS person (
                                     id_person SERIAL PRIMARY KEY,
+                                    mal_id INTEGER UNIQUE NOT NULL,
                                     name VARCHAR(255),
                                     image1 TEXT,
                                     image2 TEXT,

@@ -9,18 +9,24 @@ class AddChar:
             anime_list = char.get("anime", [])
             anime_name = anime_list[0] if isinstance(anime_list, list) and len(anime_list) > 0 else "Pas de nom d'anime"
 
-            cur.execute("""
-            INSERT INTO person (name, image1, image2, image3, anime_name) 
-            VALUES (%s, %s, %s, %s, %s)
-            """, (
-                char["nom"],
-                images[0],
-                images[1],
-                images[2],
-                anime_name,
-            ))
-            db.commit()
-            print("info mise en db")
+            cur.execute("SELECT id_person FROM person WHERE mal_id = %s", (char["mal_id"],))
+            if cur.fetchone():
+                print("Personnage déjà présente dans la db")
+                return
+            else:
+                cur.execute("""
+                INSERT INTO person (mal_id, name, image1, image2, image3, anime_name) 
+                VALUES (%s, %s, %s, %s, %s, %s)
+                """, (
+                    char["mal_id"],
+                    char["nom"],
+                    images[0],
+                    images[1],
+                    images[2],
+                    anime_name,
+                    ))
+                db.commit()
+                print("info mise en db")
         except Exception as e:
             print("Erreur:", e)
         finally:
