@@ -5,6 +5,7 @@ import random
 
 num_questions_per_series = 5
 already_selected_personages = []
+points = 0
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -68,12 +69,14 @@ def login():
 @app.route('/quiz/<int:question_number>', methods=['GET', 'POST'])
 def quiz(question_number):
     if question_number > num_questions_per_series:
-        return redirect(url_for('quiz', question_number=0)) # or other page?
+        return redirect(url_for('quiz', question_number=1)) # or other page?
     global already_selected_personages
+    global points
     names = []
     # if first question in series -> clear list of already selected personages
-    if question_number == 0:
+    if question_number == 1:
         already_selected_personages = []
+        points = 0
 
 
     db = ConnectQuizzDb.get_connection()
@@ -97,7 +100,8 @@ def quiz(question_number):
     cur.execute(sql, data)
     selected_personage_row = cur.fetchone()
     # name
-    names.append(selected_personage_row[0])
+    correct_answer = selected_personage_row[0]
+    names.append(correct_answer)
     # randomly select one of 3 images
     image_link = random.choice(selected_personage_row[1:4])
 
@@ -118,10 +122,8 @@ def quiz(question_number):
     if request.method == "POST":
         user_answer = request.form.get('name')
         return redirect(url_for('quiz', question_number=question_number + 1))
-        if True:
-            pass
-        else:
-            pass
+        if user_answer == correct_answer:
+            points += 1
 
     return render_template('quiz.html',
                            names = names,
