@@ -18,6 +18,7 @@ class ConnectPostgres:
         except psycopg2.OperationalError as e:
             print(e)
 
+
 class ConnectQuizzDb:
     @staticmethod
     def get_connection():
