@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 import requests
 
 
-
+classement={"farid LeGoat","Larry LeMalicieux" ,"Jojo L'astico" ,"Tatiana LaGoat"}
 #from config import base
 app = Flask(__name__)
 
