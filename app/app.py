@@ -64,7 +64,11 @@ def login():
 
 @app.route('/quiz/<int:question_number>', methods=['GET', 'POST'])
 def quiz(question_number):
+    if question_number > num_questions_per_series:
+        return redirect(url_for('quiz', question_number=0)) # or other page?
+
     global already_selected_personages
+    # if first question in series -> clear list of already selected personages
     if question_number == 0:
         already_selected_personages = []
     names = []
@@ -89,7 +93,7 @@ def quiz(question_number):
     data = (curr_personage_id,)
     cur.execute(sql, data)
     selected_personage_row = cur.fetchone()
-
+    # name
     names.append(selected_personage_row[0])
     # randomly select one of 3 images
     image_link = random.choice(selected_personage_row[1:4])
@@ -106,6 +110,14 @@ def quiz(question_number):
 
     # shuffle 3 answers
     random.shuffle(names)
+
+    # read and save user's answer
+    if request.method == "POST":
+        user_answer = request.form.get('name')
+        if True:
+            pass
+        else:
+            pass
 
     return render_template('quiz_test.html',
                            names = names,
