@@ -50,8 +50,8 @@ class CreateTable:
                                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
                                     """)
 
-            cur.execute(""" CREATE TABLE IF NOT EXISTS quiz_perso (
-                                    id SERIAL PRIMARY KEY,
+            cur.execute(""" CREATE TABLE IF NOT EXISTS person (
+                                    id_person SERIAL PRIMARY KEY,
                                     name VARCHAR(255),
                                     image_url TEXT,
                                     image2_url TEXT,
