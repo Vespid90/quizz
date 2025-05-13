@@ -25,9 +25,12 @@ def sign_up():
 
             db = ConnectQuizzDb.get_connection()
             cur = db.cursor()
-            cur.execute(""" INSERT INTO users(first_name, last_name, email, password)
-                               VALUES (%s, %s, %s, %s);
-                                """, (first_name, last_name, email, pw_hash))
+            try:
+                cur.execute(""" INSERT INTO users(first_name, last_name, email, password)
+                                  VALUES (%s, %s, %s, %s);
+                                  """, (first_name, last_name, email, pw_hash))
+            except:
+                return redirect(url_for('login')) #error by executing the sql-query (for example email already exists in DB)
             db.commit()
             cur.close()
             db.close()
