@@ -23,7 +23,7 @@ def sign_up():
         if password:
             pw_hash = bcrypt.generate_password_hash(password).decode('utf8')
 
-            db = Config.get_connection()
+            db = ConnectQuizzDb.get_connection()
             cur = db.cursor()
             cur.execute(""" INSERT INTO users(first_name, last_name, email, password)
                                VALUES (%s, %s, %s, %s);
@@ -43,7 +43,7 @@ def login():
         email = request.form.get('email')
         password_candidate = request.form.get('password')
 
-        db = Config.get_connection()
+        db = ConnectQuizzDb.get_connection()
         cur = db.cursor()
         sql = "SELECT password FROM users WHERE email = %s"
         data = (email,)
@@ -73,7 +73,7 @@ def quiz(question_number):
         already_selected_personages = []
     names = []
 
-    db = Config.get_connection()
+    db = ConnectQuizzDb.get_connection()
     cur = db.cursor()
     cur.execute("SELECT id_person FROM person")
     query_result = cur.fetchall()
@@ -113,7 +113,7 @@ def quiz(question_number):
 
     # read and save user's answer
     if request.method == "POST":
-        user_answer = request.form.get('name')
+        return redirect(url_for('quiz', question_number=question_number + 1))
         if True:
             pass
         else:
@@ -128,13 +128,16 @@ def quiz(question_number):
 
 
 
-classement={"farid LeGoat","Larry LeMalicieux" ,"Jojo L'astico" ,"Tatiana LaGoat"}
+classement=[{'5' :'farid LeGoat'},
+            {'4' :"Larry LeMalicieux"},
+            {'3' :"Jojo L'astico"},
+            {'2' :"Tatiana LaGoat"},
+            {'1' :"kamina"}]
 #from config import base
-app = Flask(__name__)
-
+j=0
 @app.route("/leader_board")
 def learder_board():
-   return render_template("leader_board.html")
+   return render_template("leader_board.html",classement=classement,j=j)
   
 if  __name__ == '__main__':
   app.run(debug=True)
