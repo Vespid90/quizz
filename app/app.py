@@ -119,7 +119,7 @@ def quiz(question_number):
         else:
             pass
 
-    return render_template('quiz_test.html',
+    return render_template('quiz.html',
                            names = names,
                            image_link = image_link,
                            question_number = question_number,
@@ -127,7 +127,15 @@ def quiz(question_number):
                            )
 
 
-if  __name__ == '__main__':
-    app.run(debug=True)
 
+classement={"farid LeGoat","Larry LeMalicieux" ,"Jojo L'astico" ,"Tatiana LaGoat"}
+#from config import base
+app = Flask(__name__)
+
+@app.route("/leader_board")
+def learder_board():
+   return render_template("leader_board.html")
+  
+if  __name__ == '__main__':
+  app.run(debug=True)
 
