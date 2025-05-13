@@ -68,8 +68,6 @@ def login():
 
 @app.route('/quiz/<int:question_number>', methods=['GET', 'POST'])
 def quiz(question_number):
-    if question_number > num_questions_per_series:
-        return redirect(url_for('quiz', question_number=1)) # or other page?
     global already_selected_personages
     global points
     names = []
@@ -121,9 +119,12 @@ def quiz(question_number):
     # read and save user's answer
     if request.method == "POST":
         user_answer = request.form.get('name')
-        return redirect(url_for('quiz', question_number=question_number + 1))
         if user_answer == correct_answer:
             points += 1
+        if question_number >= num_questions_per_series:
+            return redirect(url_for('quiz', question_number=1))  # change url
+        else:
+            return redirect(url_for('quiz', question_number=question_number + 1))
 
     return render_template('quiz.html',
                            names = names,
@@ -131,7 +132,6 @@ def quiz(question_number):
                            question_number = question_number,
                            num_questions_per_series = num_questions_per_series
                            )
-
 
 
 classement={"farid LeGoat","Larry LeMalicieux" ,"Jojo L'astico" ,"Tatiana LaGoat"}
