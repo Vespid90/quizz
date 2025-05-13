@@ -16,15 +16,14 @@
                           <p class="text-white-50 mb-5">Qui est donc ce personnage ?</p>
 
                           <div class="text-center">
-                              <p>{{image_link}}</p>
+
                               <img src='../static/img/{{image_link}}'  alt="" />
                           </div>
                             <!--  Mettre les nom tiré au sort et la reponse                          -->
                           <form method="post">
                               {% for i in names : %}
                                 <input type="radio" id="name1" name="name" value="HTML">
-                                <pi>{{i}}</pi>
-                                <label for="name1">{{names[i]}}</label><br>
+                                <label for="name1">{{i}}</label><br>
                               {%endfor%}
 
 

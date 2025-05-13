@@ -113,7 +113,7 @@ def quiz(question_number):
 
     # read and save user's answer
     if request.method == "POST":
-        user_answer = request.form.get('name')
+        return redirect(url_for('quiz', question_number=question_number + 1))
         if True:
             pass
         else:
@@ -128,12 +128,16 @@ def quiz(question_number):
 
 
 
-classement={"farid LeGoat","Larry LeMalicieux" ,"Jojo L'astico" ,"Tatiana LaGoat"}
+classement=[{'5' :'farid LeGoat'},
+            {'4' :"Larry LeMalicieux"},
+            {'3' :"Jojo L'astico"},
+            {'2' :"Tatiana LaGoat"},
+            {'1' :"kamina"}]
 #from config import base
-
+j=0
 @app.route("/leader_board")
 def learder_board():
-   return render_template("leader_board.html")
+   return render_template("leader_board.html",classement=classement,j=j)
   
 if  __name__ == '__main__':
   app.run(debug=True)
