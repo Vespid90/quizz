@@ -148,12 +148,17 @@ def submit():
         return jsonify({'redirect':url_for('quiz', question_number = question_number+1)})
 
 
-classement={"farid LeGoat","Larry LeMalicieux" ,"Jojo L'astico" ,"Tatiana LaGoat"}
+classement=[{'5' :'farid LeGoat'},
+            {'4' :"Larry LeMalicieux"},
+            {'3' :"Jojo L'astico"},
+            {'2' :"Tatiana LaGoat"},
+            {'1' :"kamina"}]
 #from config import base
+
 
 @app.route("/leader_board")
 def learder_board():
-   return render_template("leader_board.html")
+   return render_template("leader_board.html",classement=classement)
   
 if  __name__ == '__main__':
   app.run(debug=True)
