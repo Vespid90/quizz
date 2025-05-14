@@ -71,7 +71,9 @@ def quiz(question_number):
 
     print("start quiz") # for testing
 
+    global points
     global already_selected_personages
+
     names = []
     # if first question in series -> clear list of already selected personages
     if question_number == 1:
@@ -143,7 +145,8 @@ def submit():
 
     if question_number >= num_questions_per_series:
         print("Your final points: ", points)
-        return jsonify({'redirect': url_for('quiz', question_number=1)}) #change url?
+        # add points to the score in DB
+        return jsonify({'redirect': url_for('end')})
     else:
         return jsonify({'redirect':url_for('quiz', question_number = question_number+1)})
 
@@ -159,6 +162,11 @@ classement=[{'5' :'farid LeGoat'},
 @app.route("/leader_board")
 def learder_board():
    return render_template("leader_board.html",classement=classement)
+
+@app.route("/end")
+def end():
+    global points
+    return render_template("end.html", points=points)
   
 if  __name__ == '__main__':
   app.run(debug=True)
