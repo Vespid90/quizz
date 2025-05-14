@@ -1,10 +1,11 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, jsonify
 from flask_bcrypt import Bcrypt
 from config import *
 import random
 
 num_questions_per_series = 5
 already_selected_personages = []
+points = 0
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -25,9 +26,12 @@ def sign_up():
 
             db = ConnectQuizzDb.get_connection()
             cur = db.cursor()
-            cur.execute(""" INSERT INTO users(first_name, last_name, email, password)
-                               VALUES (%s, %s, %s, %s);
-                                """, (first_name, last_name, email, pw_hash))
+            try:
+                cur.execute(""" INSERT INTO users(first_name, last_name, email, password)
+                                  VALUES (%s, %s, %s, %s);
+                                  """, (first_name, last_name, email, pw_hash))
+            except:
+                return redirect(url_for('sign_up')) #error by executing the sql-query
             db.commit()
             cur.close()
             db.close()
@@ -64,14 +68,15 @@ def login():
 
 @app.route('/quiz/<int:question_number>', methods=['GET', 'POST'])
 def quiz(question_number):
-    if question_number > num_questions_per_series:
-        return redirect(url_for('quiz', question_number=0)) # or other page?
+
+    print("start quiz") # for testing
 
     global already_selected_personages
-    # if first question in series -> clear list of already selected personages
-    if question_number == 0:
-        already_selected_personages = []
     names = []
+    # if first question in series -> clear list of already selected personages
+    if question_number == 1:
+        already_selected_personages = []
+        points = 0
 
     db = ConnectQuizzDb.get_connection()
     cur = db.cursor()
@@ -94,7 +99,10 @@ def quiz(question_number):
     cur.execute(sql, data)
     selected_personage_row = cur.fetchone()
     # name
-    names.append(selected_personage_row[0])
+    correct_answer = selected_personage_row[0]
+    print('correct_answer from sql',correct_answer)  # for testing
+    names.append(correct_answer)
+
     # randomly select one of 3 images
     image_link = random.choice(selected_personage_row[1:4])
 
@@ -111,21 +119,33 @@ def quiz(question_number):
     # shuffle 3 answers
     random.shuffle(names)
 
-    # read and save user's answer
-    if request.method == "POST":
-        return redirect(url_for('quiz', question_number=question_number + 1))
-        if True:
-            pass
-        else:
-            pass
-
     return render_template('quiz.html',
-                           names = names,
-                           image_link = image_link,
-                           question_number = question_number,
-                           num_questions_per_series = num_questions_per_series
+                           names=names,
+                           image_link=image_link,
+                           question_number=question_number,
+                           #num_questions_per_series=num_questions_per_series,
+                           correct_answer = correct_answer
                            )
 
+@app.route('/submit',methods=['POST'])
+def submit():
+    global points
+    user_answer = request.form.get('name')
+    correct_answer = request.form.get('correct_answer')
+    question_number  = int(request.form.get('question_number'))
+    if user_answer and user_answer == correct_answer:
+        points += 1
+        print(f"You chose: {user_answer}, correct answer:{correct_answer}, you are right! New points: {points}")
+    elif user_answer:
+        print(f"You chose: {user_answer}, correct answer:{correct_answer}, you are wrong...")
+    else:
+        print('Name not chosen')
+
+    if question_number >= num_questions_per_series:
+        print("Your final points: ", points)
+        return jsonify({'redirect': url_for('quiz', question_number=1)}) #change url?
+    else:
+        return jsonify({'redirect':url_for('quiz', question_number = question_number+1)})
 
 
 classement=[{'5' :'farid LeGoat'},
@@ -134,11 +154,11 @@ classement=[{'5' :'farid LeGoat'},
             {'2' :"Tatiana LaGoat"},
             {'1' :"kamina"}]
 #from config import base
-j=0
+
 
 @app.route("/leader_board")
 def learder_board():
-   return render_template("leader_board.html",classement=classement,j=j)
+   return render_template("leader_board.html",classement=classement)
   
 if  __name__ == '__main__':
   app.run(debug=True)
