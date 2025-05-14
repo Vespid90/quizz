@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, jsonify
+from flask import Flask, request, render_template, redirect, url_for
 from flask_bcrypt import Bcrypt
 from config import *
 import random
@@ -72,11 +72,11 @@ def quiz(question_number):
     print("start quiz") # for testing
 
     global already_selected_personages
-    names = []
     # if first question in series -> clear list of already selected personages
     if question_number == 1:
         already_selected_personages = []
         points = 0
+    names = []
 
     db = ConnectQuizzDb.get_connection()
     cur = db.cursor()

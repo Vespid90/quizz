@@ -14,11 +14,12 @@ class FindImage:
 
 char = FetchChar.fetch_random_character()
 images = FindImage.prepare_images(char["image_url"])
-
-
-perso = FetchChar.fetch_random_character()
-AddChar.add_char(perso)
-if perso:
-    print(f"Nom : {perso['nom']}")
-    print(f"Image : {perso['image_url']}")
-    print(f"Apparaît dans : {perso['anime']}")
+i=1
+while i<=1000:
+    perso = FetchChar.fetch_random_character()
+    AddChar.add_char(perso)
+    if perso:
+        print(f"Nom : {perso['nom']}")
+        print(f"Image : {perso['image_url']}")
+        print(f"Apparaît dans : {perso['anime']}")
+    i=i+1

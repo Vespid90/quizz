@@ -17,24 +17,24 @@
 
                           <div class="text-center">
 
-                              <p>{{image_link}}</p>
                               <img src='../static/img/{{image_link}}'  alt="" />
                           </div>
                             <!--  Mettre les nom tiré au sort et la reponse                          -->
                           <form id="my_form" method="post">
-                                <input type="radio" id="name1" name="name" value="{{names[0]}}">
-                                <label for="name1">{{names[0]}}</label><br>
-                                <input type="radio" id="name2" name="name" value="{{names[1]}}">
-                                <label for="name2">{{names[1]}}</label><br>
-                                <input type="radio" id="name3" name="name" value="{{names[2]}}">
-                                <label for="name3">{{names[2]}}</label><br>
+                              {% for i in names : %}
+                                <input type="radio" id={{i}} name="name" value={{i}}>
+                                <label for={{i}}>{{i}}</label><br>
+                              {%endfor%}
 
 
                             <br>
-                          <!--<p class="small mb-5 pb-lg-2"><a class="text-white-50" href="#!">mot de passe oublier?</a></p> -->
+                              <p>tu as : {{points}} points</p>
+                          <!--<p class="small mb-5 pb-lg-2"><a class="text-white-50" href="#!">mot de passe oublier?</a></p> --!>
 
                           <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" type="submit" >Validez la reponse</button>
-                        </form>
+
+
+                          </form>
 
                             <p id="response"></p>
 
@@ -42,7 +42,7 @@
                                 const correctAnswer = "{{ correct_answer }}"
                                 const questionNumber = "{{ question_number }}"
 
-                        
+
 
                                 document.getElementById("my_form").addEventListener("submit", function(e){
                                         e.preventDefault();
@@ -68,6 +68,8 @@
                                  </script>
 
                         </div>
+
+
 
                       </div>
                     </div>
