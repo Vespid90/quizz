@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, jsonify
 from flask_bcrypt import Bcrypt
 from config import *
 import random
@@ -68,7 +68,7 @@ def login():
 
 @app.route('/quiz/<int:question_number>', methods=['GET', 'POST'])
 def quiz(question_number):
-
+    global points
     print("start quiz") # for testing
 
     global already_selected_personages
@@ -124,7 +124,7 @@ def quiz(question_number):
                            image_link=image_link,
                            question_number=question_number,
                            #num_questions_per_series=num_questions_per_series,
-                           correct_answer = correct_answer
+                           correct_answer = correct_answer,points=points
                            )
 
 @app.route('/submit',methods=['POST'])
@@ -159,7 +159,14 @@ classement=[{'5' :'farid LeGoat'},
 @app.route("/leader_board")
 def learder_board():
    return render_template("leader_board.html",classement=classement)
-  
+
+
+@app.route("/end")
+def end():
+    global points
+    return render_template("end.html",points=points )
+
+
 if  __name__ == '__main__':
   app.run(debug=True)
 
