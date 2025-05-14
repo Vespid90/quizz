@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, session
 from flask_bcrypt import Bcrypt
 from config import *
 import random
@@ -7,6 +7,7 @@ num_questions_per_series = 5
 already_selected_personages = []
 
 app = Flask(__name__)
+app.secret_key = 'LaTeamGoat'
 bcrypt = Bcrypt(app)
 
 @app.route('/')
@@ -45,21 +46,29 @@ def login():
 
         db = ConnectQuizzDb.get_connection()
         cur = db.cursor()
-        sql = "SELECT password FROM users WHERE email = %s"
+        sql = "SELECT id_users, password FROM users WHERE email = %s"
         data = (email,)
         cur.execute(sql, data)
         query_result = cur.fetchone()
         cur.close()
         db.close()
         if query_result:
-            pw_hash = query_result[0]
+            user_id, pw_hash = query_result
+            # pw_hash = query_result[0]
             if bcrypt.check_password_hash(pw_hash, password_candidate):
+                session['user'] = user_id
                 return redirect(url_for('quiz', question_number=1))
             else: # password incorrect
                 return redirect(url_for('login'))
         else: # email not found in DB
             return redirect(url_for('login'))
     return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)  # Supprime l'utilisateur de la session
+    return redirect('/')
+
 
 
 @app.route('/quiz/<int:question_number>', methods=['GET', 'POST'])
