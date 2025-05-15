@@ -16,14 +16,14 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link active" href="/">Home</a>
-                {% if session.get('user') %}
+                {% if session.get('user_id') %}
                 <!-- connecté : cacher login et signup -->
                 <a class="nav-item nav-link" href="/quiz/1">Quiz</a>
                 <a class="nav-item nav-link" href="/leader_board">Classement</a>
                 <a class="nav-item nav-link" href="/logout">Déconnexion</a>
                 {% else %}
                 <!-- pas connecté : afficher login et signup -->
+                <a class="nav-item nav-link active" href="/">Home</a>
                 <a class="nav-item nav-link" href="/login">Connexion</a>
                 <a class="nav-item nav-link" href="/sign_up">Inscription</a>
                 <a class="nav-item nav-link disabled" href="/quiz">Quiz</a>
