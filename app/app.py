@@ -5,7 +5,6 @@ import random
 
 num_questions_per_series = 5
 already_selected_personages = []
-points = 0
 
 app = Flask(__name__)
 app.secret_key = 'LaTeamGoat'
@@ -48,7 +47,6 @@ def sign_up():
                 cur.execute(""" INSERT INTO ranking(id_users, score)
                                                   VALUES (%s, 0);
                                                   """, (user_id,))
-
             except:
                 print("error by inserting into ranking (sql)")
 
@@ -69,7 +67,7 @@ def login():
 
         db = ConnectQuizzDb.get_connection()
         cur = db.cursor()
-        sql = "SELECT password, id_users FROM users WHERE email = %s"
+        sql = "SELECT password, id_users, first_name, last_name FROM users WHERE email = %s"
         data = (email,)
         cur.execute(sql, data)
         query_result = cur.fetchone()
@@ -77,10 +75,10 @@ def login():
         db.close()
         if query_result:
             pw_hash = query_result[0]
-            user_id = query_result[1]
-            print("user_id: ", user_id)
             if bcrypt.check_password_hash(pw_hash, password_candidate):
-                session["user_id"] = user_id
+                session["user_id"] = query_result[1]
+                session["first_name"] = query_result[2]
+                session["last_name"] = query_result[3]
                 return redirect(url_for('quiz', question_number=1))
             else: # password incorrect
                 return redirect(url_for('login'))
@@ -101,7 +99,7 @@ def quiz(question_number):
     # if first question in series -> clear list of already selected personages
     if question_number == 1:
         already_selected_personages = []
-        points = 0
+        session['points'] = 0
 
     db = ConnectQuizzDb.get_connection()
     cur = db.cursor()
@@ -154,20 +152,19 @@ def quiz(question_number):
 
 @app.route('/submit',methods=['POST'])
 def submit():
-    global points
     user_answer = request.form.get('name')
     correct_answer = request.form.get('correct_answer')
     question_number  = int(request.form.get('question_number'))
     if user_answer and user_answer == correct_answer:
-        points += 1
-        print(f"You chose: {user_answer}, correct answer:{correct_answer}, you are right! New points: {points}")
+        session['points'] =  session.get('points') + 1
+        print(f"You chose: {user_answer}, correct answer:{correct_answer}, you are right! New points: {session.get('points')}")
     elif user_answer:
         print(f"You chose: {user_answer}, correct answer:{correct_answer}, you are wrong...")
     else:
         print('Name not chosen')
 
     if question_number >= num_questions_per_series:
-        print("Your final points: ", points)
+        print("Your final points: ", session.get('points'))
 
         # add points to the score in DB
         db = ConnectQuizzDb.get_connection()
@@ -177,7 +174,7 @@ def submit():
                         SET score = score + %s, updated_at = now()
                         WHERE id_users = %s 
                         """
-            data = (points, session.get('user_id'))
+            data = (session.get('points'), session.get('user_id'))
             cur.execute(sql, data)
             db.commit()
         except:
@@ -204,8 +201,7 @@ def learder_board():
 
 @app.route("/end")
 def end():
-    global points
-    return render_template("end.html", points=points)
+    return render_template("end.html", points=session.get('points'))
   
 if  __name__ == '__main__':
   app.run(debug=True)
