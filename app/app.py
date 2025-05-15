@@ -69,7 +69,7 @@ def login():
 
         db = ConnectQuizzDb.get_connection()
         cur = db.cursor()
-        sql = "SELECT password FROM users WHERE email = %s"
+        sql = "SELECT password, id_users FROM users WHERE email = %s"
         data = (email,)
         cur.execute(sql, data)
         query_result = cur.fetchone()
@@ -77,8 +77,10 @@ def login():
         db.close()
         if query_result:
             pw_hash = query_result[0]
+            user_id = query_result[1]
+            print("user_id: ", user_id)
             if bcrypt.check_password_hash(pw_hash, password_candidate):
-
+                session["user_id"] = user_id
                 return redirect(url_for('quiz', question_number=1))
             else: # password incorrect
                 return redirect(url_for('login'))
@@ -166,7 +168,23 @@ def submit():
 
     if question_number >= num_questions_per_series:
         print("Your final points: ", points)
+
         # add points to the score in DB
+        db = ConnectQuizzDb.get_connection()
+        cur = db.cursor()
+        try:
+            sql = """UPDATE ranking
+                        SET score = score + %s, updated_at = now()
+                        WHERE id_users = %s 
+                        """
+            data = (points, session.get('user_id'))
+            cur.execute(sql, data)
+            db.commit()
+        except:
+            print("Error by updating table ranking")
+        cur.close()
+        db.close()
+
         return jsonify({'redirect': url_for('end')})
     else:
         return jsonify({'redirect':url_for('quiz', question_number = question_number+1)})
