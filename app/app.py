@@ -188,7 +188,6 @@ classement=[{'5' :'farid LeGoat'},
             {'1' :"kamina"}]
 #from config import base
 
-
 @app.route("/leader_board")
 def learder_board():
     classement = {}
