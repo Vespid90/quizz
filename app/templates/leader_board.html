@@ -21,24 +21,23 @@
                   <thead>
                     <tr>
                       <th scope="col">#</th>
-                      <th scope="col">Last name</th>
-                      <th scope="col">point</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Score</th>
                     </tr>
                   </thead>
                   <tbody>
-                  {% for i in classement: %}
-                    {% for item, value in i.items(): %}
+
+                  {% for key, value in classement.items(): %}
                          <tr>
-                           <td></td>
+                           <td>{{ loop.index }}</td>
+                           <td>{{ key }}</td>
                            <td>{{ value }}</td>
-                           <td>{{ item }}</td>
                          </tr>
-                    {% endfor %}
                   {% endfor %}
+
 
                   </tbody>
                 </table>
-
 
           </div>
         </div>
