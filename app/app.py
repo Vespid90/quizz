@@ -31,9 +31,9 @@ def sign_up():
                 cur.execute(""" INSERT INTO users(first_name, last_name, email, password)
                                   VALUES (%s, %s, %s, %s);
                                   """, (first_name, last_name, email, pw_hash))
+                db.commit()
             except:
                 return redirect(url_for('sign_up')) #error by executing the sql-query
-            db.commit()
 
             try:
                 sql = "SELECT id_users FROM users WHERE email = %s"
@@ -42,7 +42,7 @@ def sign_up():
                 user_id = cur.fetchone()[0]
                 print(user_id)
             except:
-                print("error sql select id_users")
+                print("error by selecting id_users (sql)")
 
             try:
                 cur.execute(""" INSERT INTO ranking(id_users, score)
@@ -50,7 +50,7 @@ def sign_up():
                                                   """, (user_id,))
 
             except:
-                print("error sql insert into ranking")
+                print("error by inserting into ranking (sql)")
 
             db.commit()
             cur.close()
