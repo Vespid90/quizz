@@ -22,7 +22,7 @@
                             <!--  Mettre les nom tiré au sort et la reponse                          -->
                           <form id="my_form" method="post">
                               {% for i in names : %}
-                                <input type="radio" id={{i}} name="name" value={{i}}>
+                                <input type="radio" id={{i}} name="name" value="{{i}}">
                                 <label for={{i}}>{{i}}</label><br>
                               {%endfor%}
 
