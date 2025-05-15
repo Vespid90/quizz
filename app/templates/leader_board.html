@@ -29,9 +29,9 @@
 
                   {% for key, value in classement.items(): %}
                          <tr>
-                           <td>{{j}}</td>
-                           <td>{{ value }}</td>
+                           <td>{{ loop.index }}</td>
                            <td>{{ key }}</td>
+                           <td>{{ value }}</td>
                          </tr>
                   {% endfor %}
 

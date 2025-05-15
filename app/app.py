@@ -38,7 +38,6 @@ def sign_up():
                 data = (email,)
                 cur.execute(sql, data)
                 user_id = cur.fetchone()[0]
-                print(user_id)
             except:
                 print("error by selecting id_users (sql)")
 
@@ -89,10 +88,8 @@ def login():
 @app.route('/quiz/<int:question_number>', methods=['GET', 'POST'])
 def quiz(question_number):
 
-    print("start quiz") # for testing
-
     names = []
-    # if first question in series -> clear list of already selected personages
+    # if first question in series -> clear list of already selected personages and set points=0
     if question_number == 1:
         session['selected_personages'] = []
         session['points'] = 0
@@ -144,7 +141,6 @@ def quiz(question_number):
                            names=names,
                            image_link=image_link,
                            question_number=question_number,
-                           #num_questions_per_series=num_questions_per_series,
                            correct_answer = correct_answer,
                            points = session.get('points')
                            )
@@ -164,7 +160,6 @@ def submit():
 
     if question_number >= num_questions_per_series:
         print("Your final points: ", session.get('points'))
-
         # add points to the score in DB
         db = ConnectQuizzDb.get_connection()
         cur = db.cursor()
