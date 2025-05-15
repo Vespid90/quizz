@@ -92,7 +92,6 @@ def quiz(question_number):
 
     print("start quiz") # for testing
 
-    global points
     global already_selected_personages
 
     names = []
@@ -147,7 +146,8 @@ def quiz(question_number):
                            image_link=image_link,
                            question_number=question_number,
                            #num_questions_per_series=num_questions_per_series,
-                           correct_answer = correct_answer
+                           correct_answer = correct_answer,
+                           points = session.get('points')
                            )
 
 @app.route('/submit',methods=['POST'])
