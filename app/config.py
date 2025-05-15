@@ -4,26 +4,56 @@ import os
 
 load_dotenv()
 
-class Config:
-
+class ConnectPostgres:
     @staticmethod
     def get_connection():
-        conn = psycopg2.connect(
-            dbname=os.getenv('DB_NAME'),
-            user=os.getenv('DB_USER'),
-            host=os.getenv('DB_HOST'),
-            password=os.getenv('DB_PWD'))
-        return conn
+        try:
+            conn = psycopg2.connect(
+                dbname=os.getenv('DB_NAME_database'),
+                user=os.getenv('DB_USER'),
+                host=os.getenv('DB_HOST'),
+                password=os.getenv('DB_PWD')
+            )
+            return conn
+        except psycopg2.OperationalError as e:
+            print(e)
 
 
-#à mettre dans une methode pour appel des queries
-#coir l'exemple
+class ConnectQuizzDb:
+    @staticmethod
+    def get_connection():
+        try:
+            conn = psycopg2.connect(
+                dbname=os.getenv('DB_NAME'),
+                user=os.getenv('DB_USER'),
+                host=os.getenv('DB_HOST'),
+                password=os.getenv('DB_PWD')
+            )
+            return conn
+        except psycopg2.OperationalError as e:
+            print(e)
 
-# db = Config.get_connection()
-# cur = db.cursor()
+class DisconnectQuizzDb:
+    @staticmethod
+    def disconnect_db(conn):
+        try:
+            conn.close()
+        except Exception as e:
+            print("erreur:", e)
 
-#cur.execute(""" SELECT * FROM users
-#                 """)
 
-# cur.close()
-# db.close()
+
+#exemple de query avec un try/catch
+# conn = ConnectQuizzDb.get_connection()
+# cur = conn.cursor()
+#
+# class Query1:
+#     @staticmethod
+#     def query_1(cur, conn):
+#         try:
+#             cur.execute(""" INSERT INTO person (name) VALUES (Naruto) """)
+#         except Exception as e:
+#             print ("Erreur: ", e)
+#         finally:
+#             conn.commit()
+#             cur.close()

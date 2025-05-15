@@ -1,0 +1,34 @@
+body{
+  background-image: url('../img/bgAnime.jpg');
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+    height :100%;
+    width: 100%;
+}
+
+img {
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  width: 300px;
+  height:400px
+}
+img:hover {
+  transform: scaleX(-1);
+}
+.cascading-right {
+      margin-right: -50px;
+    }
+
+@media (max-width: 991.98px) {
+      .cascading-right {
+        margin-right: 0;
+      }
+    }
+#makima_signup{
+  padding: 5px;
+  width: 400px;
+  height:400px
+}
