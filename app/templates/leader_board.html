@@ -26,14 +26,13 @@
                     </tr>
                   </thead>
                   <tbody>
-                  {% for i in classement: %}
-                    {% for item, value in i.items(): %}
+
+                  {% for key, value in classement.items(): %}
                          <tr>
                            <td>{{j}}</td>
                            <td>{{ value }}</td>
-                           <td>{{ item }}</td>
+                           <td>{{ key }}</td>
                          </tr>
-                    {% endfor %}
                   {% endfor %}
 
                   </tbody>

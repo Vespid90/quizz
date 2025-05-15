@@ -196,7 +196,22 @@ classement=[{'5' :'farid LeGoat'},
 
 @app.route("/leader_board")
 def learder_board():
-   return render_template("leader_board.html",classement=classement)
+    classement = {}
+
+    db = ConnectQuizzDb.get_connection()
+    cur = db.cursor()
+    sql = """SELECT r.score, u.first_name, u.last_name
+                FROM ranking r JOIN users u ON r.id_users = u.id_users
+                ORDER  BY r.score DESC
+                """
+    cur.execute(sql)
+    query_res = cur.fetchall()
+    for row in query_res:
+        classement[row[0]] = ' '.join([row[1], row[2]])
+    cur.close()
+    db.close()
+
+    return render_template("leader_board.html",classement=classement)
 
 @app.route("/end")
 def end():
