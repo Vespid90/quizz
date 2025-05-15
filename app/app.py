@@ -4,7 +4,6 @@ from config import *
 import random
 
 num_questions_per_series = 5
-already_selected_personages = []
 
 app = Flask(__name__)
 app.secret_key = 'LaTeamGoat'
@@ -92,14 +91,13 @@ def quiz(question_number):
 
     print("start quiz") # for testing
 
-    global already_selected_personages
-
     names = []
     # if first question in series -> clear list of already selected personages
     if question_number == 1:
-        already_selected_personages = []
+        session['selected_personages'] = []
         session['points'] = 0
 
+    already_selected_personages = session.get('selected_personages')
     db = ConnectQuizzDb.get_connection()
     cur = db.cursor()
     cur.execute("SELECT id_person FROM person")
@@ -110,6 +108,7 @@ def quiz(question_number):
     curr_personage_id = random.choice(list(set(personages_ids) - set(already_selected_personages)))
     # add the personage to the list of selected personages in this series
     already_selected_personages.append(curr_personage_id)
+    session['selected_personages'] = already_selected_personages
 
     # randomly select two other personages for false answers
     personages_ids.remove(curr_personage_id)
