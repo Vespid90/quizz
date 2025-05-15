@@ -72,7 +72,8 @@ def login():
         cur.close()
         db.close()
         if query_result:
-            pw_hash = query_result[0]
+            user_id, pw_hash = query_result
+            # pw_hash = query_result[0]
             if bcrypt.check_password_hash(pw_hash, password_candidate):
                 session["user_id"] = query_result[1]
                 session["first_name"] = query_result[2]
@@ -83,6 +84,12 @@ def login():
         else: # email not found in DB
             return redirect(url_for('login'))
     return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect('/')
+
 
 
 @app.route('/quiz/<int:question_number>', methods=['GET', 'POST'])
