@@ -72,8 +72,7 @@ def login():
         cur.close()
         db.close()
         if query_result:
-            #user_id, pw_hash = query_result
-            user_id,pw_hash = query_result[0]
+            pw_hash = query_result[0]
             if bcrypt.check_password_hash(pw_hash, password_candidate):
                 session["user_id"] = query_result[1]
                 session["first_name"] = query_result[2]
@@ -87,7 +86,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('user', None)
+    session.pop('user_id', None)
     return redirect('/')
 
 
