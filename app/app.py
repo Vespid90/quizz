@@ -207,7 +207,7 @@ def learder_board():
     cur.execute(sql)
     query_res = cur.fetchall()
     for row in query_res:
-        classement[row[0]] = ' '.join([row[1], row[2]])
+        classement[' '.join([row[1], row[2]])] = row[0]
     cur.close()
     db.close()
 
