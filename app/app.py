@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, jsonify
+from flask import Flask, request, render_template, redirect, url_for, jsonify, session
 from flask_bcrypt import Bcrypt
 from config import *
 import random
@@ -8,6 +8,7 @@ already_selected_personages = []
 points = 0
 
 app = Flask(__name__)
+app.secret_key = 'LaTeamGoat'
 bcrypt = Bcrypt(app)
 
 @app.route('/')
@@ -32,6 +33,25 @@ def sign_up():
                                   """, (first_name, last_name, email, pw_hash))
             except:
                 return redirect(url_for('sign_up')) #error by executing the sql-query
+            db.commit()
+
+            try:
+                sql = "SELECT id_users FROM users WHERE email = %s"
+                data = (email,)
+                cur.execute(sql, data)
+                user_id = cur.fetchone()[0]
+                print(user_id)
+            except:
+                print("error sql select id_users")
+
+            try:
+                cur.execute(""" INSERT INTO ranking(id_users, score)
+                                                  VALUES (%s, 0);
+                                                  """, (user_id,))
+
+            except:
+                print("error sql insert into ranking")
+
             db.commit()
             cur.close()
             db.close()
@@ -58,6 +78,7 @@ def login():
         if query_result:
             pw_hash = query_result[0]
             if bcrypt.check_password_hash(pw_hash, password_candidate):
+
                 return redirect(url_for('quiz', question_number=1))
             else: # password incorrect
                 return redirect(url_for('login'))
